@@ -113,22 +113,6 @@ clStudent clStudent::operator= (const clStudent& student) {
 	this->exam = student.exam;
 	return *this;
 }
-//Student Student::operator=(const Student& student)
-//clStudent::clStudent(const clStudent& student) {
-//	strcpy_s(this->name, student.name);
-//	strcpy_s(this->surname, student.surname);
-//	strcpy_s(this->patronymic, student.patronymic);
-//	this->birthDay = student.birthDay;
-//	this->birthMonth = student.birthMonth;
-//	this->birthYear = student.birthYear;
-//	this->startStudyYear = student.startStudyYear;
-//	strcpy_s(this->faculty, student.faculty);
-//	strcpy_s(this->department, student.department);
-//	strcpy_s(this->group, student.group);
-//	strcpy_s(this->ID, student.ID);
-//	this->sex = student.sex;
-//	this->exam = student.exam;
-//} 
 
 unsigned short clStudent::addExam(const unsigned short _numSession, const char _nameLesson[40], const unsigned short _grade, const unsigned short _numLesson) {
 	return exam.addLesson(_numSession, _nameLesson, _grade, _numLesson);
