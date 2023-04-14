@@ -84,7 +84,6 @@ public:
 			}
 		}
 	}
-
 	bool checkID(string _id) {
 		string Digits = "0123456789";
 		string AlphabetRU = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
@@ -111,21 +110,47 @@ public:
 			}
 		}
 	}
-	void addInitials(string name, string surname, string patronymic) {
-		if (checkString) {
-			this->name = name;
+	bool checkDate(int birthDay, int birthMonth, int birthYear, int startStudyYear) {
+		for (int i = 1; i < 32; i++) {
+			while (i < 13) {
+				if (!(birthMonth == i)) {
+					cout << "Неверная запись месяца рождения" << endl;
+					return false;
+				}
+			}
+			if (!(birthDay == i)) {
+				cout << "Неверная запись дня рождения" << endl;
+				return false;
+			}
+			else {
+				return true;
+			}
 		}
-		if (checkString) {
-			this->surname = surname;
+		if (!((1905 <= birthYear <= 2005) && (1947 <= startStudyYear <= 2022))) {
+			cout << "Неверная запись года рождения или поступления" << endl;
+			return false;
 		}
-		if (checkString) {
-			this->patronymic = patronymic;
+		else {
+			return true;
 		}
 	}
-	void addData(int birthDay, int birthMonth, int birthYear, int startStudyYear) {
-		this->birthDay = birthDay;
-		this->birthMonth = birthMonth;
-		this->birthYear = birthYear;
-		this->startStudyYear = startStudyYear;
+	void addInitials(string name, string surname, string patronymic) {
+		if (checkString(name)) { this->name = name; }
+		if (checkString(surname)) {this->surname = surname; }
+		if (checkString(patronymic)) {this->patronymic = patronymic; }
+	}
+	void addDate(int birthDay, int birthMonth, int birthYear, int startStudyYear) {
+		if (checkDate(birthDay, birthMonth, birthYear, startStudyYear)) {
+			this->birthDay = birthDay;
+			this->birthMonth = birthMonth;
+			this->birthYear = birthYear;
+			this->startStudyYear = startStudyYear;
+		}
+	}
+	void addInstituteData(string faculty, string department, string group, string ID){
+		if (checkString(faculty)) { this->faculty = faculty; }
+		if (checkString(department)) { this->faculty = department; }
+		if (checkGroup(group)) { this->faculty = group; }
+		if (checkID(ID)) { this->faculty = ID; }
 	}
 };
