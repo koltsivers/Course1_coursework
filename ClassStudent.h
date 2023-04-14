@@ -110,15 +110,15 @@ public:
 			}
 		}
 	}
-	bool checkDate(int birthDay, int birthMonth, int birthYear, int startStudyYear) {
+	bool checkDate(int _birthDay, int _birthMonth, int _birthYear, int _startStudyYear) {
 		for (int i = 1; i < 32; i++) {
 			while (i < 13) {
-				if (!(birthMonth == i)) {
+				if (!(_birthMonth == i)) {
 					cout << "Неверная запись месяца рождения" << endl;
 					return false;
 				}
 			}
-			if (!(birthDay == i)) {
+			if (!(_birthDay == i)) {
 				cout << "Неверная запись дня рождения" << endl;
 				return false;
 			}
@@ -126,7 +126,7 @@ public:
 				return true;
 			}
 		}
-		if (!((1905 <= birthYear <= 2005) && (1947 <= startStudyYear <= 2022))) {
+		if (!((1905 <= _birthYear <= 2005) && (1947 <= _startStudyYear <= 2022))) {
 			cout << "Неверная запись года рождения или поступления" << endl;
 			return false;
 		}
