@@ -23,6 +23,7 @@ int main() {
 			Sleep(50);
 		}
 	}
+	system("cls");
 	ClassMenu* mainMenu = new ClassMenu("Заглавное меню");
 	mainMenu->addItemMenu("Добавить студента");
 	mainMenu->addItemMenu("Поиск студента по номеру студенческого билета");
@@ -31,7 +32,13 @@ int main() {
 	mainMenu->addItemMenu("Выполнить вариант 60");
 	mainMenu->addItemMenu("Выход");
 	mainMenu->drawMenu();
-	int key = _getch();
+	cout << endl;
+	StudentMenu* studentMenu = new StudentMenu("Заполненине данных студента");
+	studentMenu->addItemMenu("Заполнить инициалы");
+	studentMenu->addItemMenu("Добавить год рождения и поступления");
+	studentMenu->addItemMenu("Выбрать пол");
+	studentMenu->addItemMenu("Ввести данные о сессии");
+	studentMenu->drawMenu();
 	system("pause");
 	return 0;
 
