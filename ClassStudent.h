@@ -54,6 +54,14 @@ public:
 		string group = _group;
 		string Digits = "0123456789";
 		string AlphabetRU = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+		string ourGroup = "БИСО-01-22";
+		for (int  i = 0; i < (int)(ourGroup.size()); i++) {
+			for (int j = 0; j < (int)(_group.size()); j++) {
+				if (_group[j] == ourGroup[i]) {
+					cout << "Наш человек!" << endl;
+				}
+			}
+		}
 		if (group.length() != 10) {
 			cout << "Неверная длина записи" << endl;
 			return false;
@@ -128,6 +136,7 @@ public:
 		}
 		if (!((1905 <= _birthYear <= 2005) && (1947 <= _startStudyYear <= 2022))) {
 			cout << "Неверная запись года рождения или поступления" << endl;
+			cout << "Пишите правду :)" << endl;
 			return false;
 		}
 		else {
@@ -154,3 +163,4 @@ public:
 		if (checkID(ID)) { this->faculty = ID; }
 	}
 };
+
