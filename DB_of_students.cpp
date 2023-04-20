@@ -2,11 +2,11 @@
 #include <windows.h>
 #include <iostream>
 #include <string>
-#include <string.h>
-#include <conio.h>
 #include <stdio.h>
 #include <fstream>
 #include "ClassMenu.h"
+#include "ClassStudent.h"
+#include "Exams.h"
 using namespace std;
 
 
@@ -20,7 +20,7 @@ int main() {
 		if (i < compilanceCourseWork.length()) {
 			//SetConsoleTextAttribute(hOUTPUT, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 			cout << compilanceCourseWork[i];
-			Sleep(50);
+			Sleep(25);
 		}
 	}
 	system("cls");
@@ -33,13 +33,51 @@ int main() {
 	mainMenu->addItemMenu("Выход");
 	mainMenu->drawMenu();
 	cout << endl;
-	StudentMenu* studentMenu = new StudentMenu("Заполненине данных студента");
+	StudentMenu* studentMenu = new StudentMenu("");;
 	studentMenu->addItemMenu("Заполнить инициалы");
 	studentMenu->addItemMenu("Добавить год рождения и поступления");
 	studentMenu->addItemMenu("Выбрать пол");
 	studentMenu->addItemMenu("Ввести данные о сессии");
-	studentMenu->drawMenu();
-	system("pause");
+	int countItems = mainMenu->getItemCount();
+
+
+	int key = _getch();
+	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+	int firstItem = 0;
+	int selectedItem = 0;
+	for (int i = 0; i < (int)(mainMenu->getItemCount()); i++){
+		//Enter
+		if (key == 13) {
+			system("cls");
+			
+		}
+		//Arrow up
+		if (key == 38) {
+			system("cls");
+			if (selectedItem - mainMenu->getItemCount() == 1) {
+				selectedItem = 0;
+				SetConsoleTextAttribute(h, 0x000A);
+				mainMenu->getItemMenu(selectedItem);
+			}
+			else {
+				selectedItem++;
+			}
+			
+		}
+		//Arrow down
+		if (key == 40) {
+			system("cls");
+			if (selectedItem < firstItem) {
+				selectedItem == 5;
+				SetConsoleTextAttribute(h, 0x000A);
+				mainMenu->getItemMenu(selectedItem);
+			}
+			else {
+				selectedItem--;
+			}
+			
+		}
+	}
 	return 0;
 
 };
