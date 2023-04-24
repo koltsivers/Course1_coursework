@@ -63,7 +63,7 @@ public:
 			}
 		}
 		if (group.length() != 10) {
-			cout << "Неверная длина записи" << endl;
+			cout << "Неверная длина записи группы" << endl;
 			return false;
 		}
 		for (int i = 0; i < (int)(group.size()); i++) {
@@ -97,7 +97,7 @@ public:
 		string AlphabetRU = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
 		string id = _id;
 		if (id.length() != 7) {
-			cout << "Неверная длина записи" << endl;
+			cout << "Неверная длина записи номера" << endl;
 			return false;
 		}
 		for (int i = 0; i < (int)(id.size()); i++) {
@@ -144,12 +144,12 @@ public:
 		}
 	}
 	void addInitials(string name, string surname, string patronymic) {
-		if (checkString(name)) { this->name = name; }
-		if (checkString(surname)) {this->surname = surname; }
-		if (checkString(patronymic)) {this->patronymic = patronymic; }
+		while (!(checkString(name))) { this->name = name; }
+		while (!(checkString(surname))) {this->surname = surname; }
+		while (!(checkString(patronymic))) {this->patronymic = patronymic; }
 	}
 	void addDate(int birthDay, int birthMonth, int birthYear, int startStudyYear) {
-		if (checkDate(birthDay, birthMonth, birthYear, startStudyYear)) {
+		while (!(checkDate(birthDay, birthMonth, birthYear, startStudyYear))) {
 			this->birthDay = birthDay;
 			this->birthMonth = birthMonth;
 			this->birthYear = birthYear;
@@ -157,10 +157,22 @@ public:
 		}
 	}
 	void addInstituteData(string faculty, string department, string group, string ID){
-		if (checkString(faculty)) { this->faculty = faculty; }
-		if (checkString(department)) { this->faculty = department; }
-		if (checkGroup(group)) { this->faculty = group; }
-		if (checkID(ID)) { this->faculty = ID; }
+		while (!(checkString(faculty))) { this->faculty = faculty; }
+		while (!(checkString(department))) { this->faculty = department; }
+		while (!(checkGroup(group))) { this->faculty = group; }
+		while (!(checkID(ID))) { this->faculty = ID; }
 	}
-};
+	bool chekingSex(int _sex) {
+		if ((_sex == 1) || (_sex == 0)) {
+			return true;
+		}
+		else {
+			cout << "Введенно неверное значение\n";
+			return false;
+		}
+	}
+	void addSex(bool sex) {
+		this->sex = sex;
+	}
 
+};
