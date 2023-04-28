@@ -21,17 +21,17 @@ private:
 	clExam exam;
 public:
 	clStudent() {
-		string name = "emptyName";
-		string surname = "emptySurname";
-		string patronymic = "emptyPatronymic";
-		unsigned short birthDay = 01;
-		unsigned short birthMonth = 01;
-		unsigned short birthYear = 1970;
-		unsigned short startStudyYear = 2000;
-		string faculty = "emptyFaculty";
-		string department = "emptyDepartment";
-		string group = "emptyGroup";
-		string ID = "empty ID";
+		string name = "Name";
+		string surname = "Surname";
+		string patronymic = "Patronymic";
+		unsigned short birthDay = 0;
+		unsigned short birthMonth = 0;
+		unsigned short birthYear = 0;
+		unsigned short startStudyYear = 0;
+		string faculty = "Faculty";
+		string department = "Department";
+		string group = "Group";
+		string ID = "ID";
 		bool sex = false;
 		clExam exam;
 	};
@@ -55,7 +55,7 @@ public:
 		string Digits = "0123456789";
 		string AlphabetRU = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
 		string ourGroup = "БИСО-01-22";
-		for (int  i = 0; i < (int)(ourGroup.size()); i++) {
+		for (int i = 0; i < (int)(ourGroup.size()); i++) {
 			for (int j = 0; j < (int)(_group.size()); j++) {
 				if (_group[j] == ourGroup[i]) {
 					cout << "Наш человек!" << endl;
@@ -118,51 +118,48 @@ public:
 			}
 		}
 	}
-	bool checkDate(int _birthDay, int _birthMonth, int _birthYear, int _startStudyYear) {
-		for (int i = 1; i < 32; i++) {
-			while (i < 13) {
-				if (!(_birthMonth == i)) {
-					cout << "Неверная запись месяца рождения" << endl;
+	bool checkDate(const unsigned short birthDay, const unsigned short birthMonth, const unsigned short birthYear) {
+		if ((birthYear % 4 == 0) && (birthYear % 100 == 0) && (birthYear % 400 == 0)) {
+			if (birthMonth == 2){
+				if (birthDay == 29) {
+					return true;
+				}
+				else {
 					return false;
 				}
 			}
-			if (!(_birthDay == i)) {
-				cout << "Неверная запись дня рождения" << endl;
+			else {
 				return false;
 			}
-			else {
-				return true;
-			}
-		}
-		if (!((1905 <= _birthYear <= 2005) && (1947 <= _startStudyYear <= 2022))) {
-			cout << "Неверная запись года рождения или поступления" << endl;
-			cout << "Пишите правду :)" << endl;
-			return false;
 		}
 		else {
-			return true;
+			if (1 <= birthMonth <= 12) {
+				if ((birthMonth == 1) || (birthMonth == 3) || (birthMonth == 5) || \
+					(birthMonth == 7) || (birthMonth == 8) || (birthMonth == 10) ||
+					(birthMonth == 12)) {
+					if (1 <= birthDay <= 31) {
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				else {
+					if (1 <= birthDay <= 30) {
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+			}
+			else {
+				return false;
+			}
 		}
 	}
-	void addInitials(string name, string surname, string patronymic) {
-		while (!(checkString(name))) { this->name = name; }
-		while (!(checkString(surname))) {this->surname = surname; }
-		while (!(checkString(patronymic))) {this->patronymic = patronymic; }
-	}
-	void addDate(int birthDay, int birthMonth, int birthYear, int startStudyYear) {
-		while (!(checkDate(birthDay, birthMonth, birthYear, startStudyYear))) {
-			this->birthDay = birthDay;
-			this->birthMonth = birthMonth;
-			this->birthYear = birthYear;
-			this->startStudyYear = startStudyYear;
-		}
-	}
-	void addInstituteData(string faculty, string department, string group, string ID){
-		while (!(checkString(faculty))) { this->faculty = faculty; }
-		while (!(checkString(department))) { this->faculty = department; }
-		while (!(checkGroup(group))) { this->faculty = group; }
-		while (!(checkID(ID))) { this->faculty = ID; }
-	}
-	bool chekingSex(int _sex) {
+
+	bool checkSex(const unsigned short _sex) {
 		if ((_sex == 1) || (_sex == 0)) {
 			return true;
 		}
@@ -171,8 +168,55 @@ public:
 			return false;
 		}
 	}
-	void addSex(bool sex) {
-		this->sex = sex;
+	void addName(const string& name) {
+		while (!(checkString(name))) {
+			this->name = name;
+		}
+	}
+	void addSurname(const string& surname) {
+		while (!(checkString(surname))) {
+			this->surname = surname;
+		}
+	}
+	void addPatronymic(const string& patronymic) {
+		while (!(checkString(patronymic))) {
+			this->patronymic = patronymic;
+		}
+	}
+	void addData(const unsigned short birthDay, const unsigned short birthMonth, const unsigned short birthYear) {
+		while (!(checkDate(birthDay, birthMonth, birthYear))) {
+			this->birthDay = birthDay;
+			this->birthMonth = birthMonth;
+			this->birthYear = birthYear;
+		}
+	}
+	void addSStartStudyYear() {
+
+	}
+	void addFaculty(const string& faculty) {
+		while (!(checkString(faculty))) {
+			this->faculty = faculty;
+		}
+	}
+	void addDepartment(const string& department) {
+		while (!(checkString(department))) {
+			this->department = department;
+		}
+	}
+	void addGroup(const string& group) {
+		while (!(checkGroup(group))) {
+			this->group = group;
+		}
+	}
+	void addID(const string& ID) {
+		while (!(checkID(ID))) {
+			this->ID = ID;
+		}
+	}
+	void addSex(const bool sex) {
+		while (!(checkSex(sex))) {
+			this->sex = sex;
+		}
 	}
 
 };
