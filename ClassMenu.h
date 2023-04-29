@@ -4,8 +4,15 @@
 #include <conio.h>
 #include <stdio.h>
 #include <windows.h>
+#include "List.h"
 #include "ClassStudent.h"
 using namespace std;
+struct ListMenu {
+	clList <string> mainMenu;
+	clList <string> studentMenu;
+	clList <string> sexMenu;
+	clList <string> examsMenu;
+};
 
 class ClassMenu
 {
@@ -14,6 +21,8 @@ private:
 	string items[100];
 	bool isTakenItem = false;
 public:
+	ClassMenu() : upTitle("Заголовок") {}
+
 	ClassMenu(string upTitle) {
 		this->upTitle = upTitle;
 	}
@@ -46,37 +55,8 @@ public:
 			cout << i << "." << items[i] << endl;
 		}
 	}
-	//int swappingTable(int _choice, ClassMenu _menu) {
-	//	int currentItem = _choice;
-	//	int key = _getch();
-	//	while (((key = _getch()) != '\n') && key != EOF) {
-	//		//Стрелка вверх/ w
-	//		if (key == 119) {
-	//			currentItem++;
-	//			for (int i = 0; i < _menu.getItemCount(); i++)
-	//			{
-	//				;
-	//			}
-	//			cout << currentItem << endl;
-	//		}
-	//		//Стрелка вниз / s
-	//		if (key == 115) {
-	//			currentItem--;
-	//			cout << currentItem << endl;
 
-	//		}
-	//		//Enter
-	//		if (key == 13) {
-	//			return currentItem;
-
-	//		}
-	//		else {
-	//			return 000000000000000000000000;
-	//		}
-	//	}
-	//}
-
-	int get_variant(int _count) {
+	int getVariant(int _count) {
 		int variant;
 		char s[100];
 		cin >> s; 
@@ -89,48 +69,87 @@ public:
 	}
 
 
-	int switchTable(ClassMenu _mainMenu, ClassMenu _studentMenu) {
-		int variant = get_variant(5);
+	void switchMainTable(int _variant, ClassMenu _mainMenu, ClassMenu _studentMenu) {
+		int variant = _variant;
+		clStudent student;
 		do {
 			_mainMenu.drawMenu();
 			switch (variant) {
 				case 0:
 					//Добавление студента
+					system("cls");
+					cout << 0 << endl;
 					break;
 				case 1:
+					system("cls");
 					//Поиск студента по ID
 					cout << 1 << endl;
 					break;
 				case 2:
+					system("cls");
 					//Удалить студента
 					cout << 2 << endl;
 					break;
 				case 3:
+					system("cls");
 					//Зашифровать данные
 					cout << 3 << endl;
 					break;
 				case 4:
+					system("cls");
 					//Выполнить вариант 60
 					cout << 4 << endl;
 					break;
 			}
 			if (variant != 5) { system("pause"); }
-
+		\
+		//Выход из меню/подменю
 		} while (variant != 5);
 
-		return 0;
+		return exitTable();
 	}
 
+	void switchStudentTable(int _variant, ClassMenu _studentMenu) {
+		int variant = _variant;
+		const unsigned int SIZE = 3;
+		string arInitials[SIZE] = {"Имя", "Фамилия", "Отчество"};
+		do {
+			_studentMenu.drawMenu();
+			switch (variant) {
+			case 0:
+				
+				break;
+			case 1:
+				//_student.addDate();
+				break;
+			case 2:
+				//_student.addInstituteData();
+				break;
+			case 3:
+				//_student.addSex();
+				break;
+			case 4:
+				//_student.addExams();
+				break;
+			}
+			if (variant != 5) { system("pause"); }
+
+		} while (variant != 5);
+	}
+	//Вариант 60. Найти и распечатать все данные о студентах, которые 
+	//успевают с наибольшим и наименьшим успехом в одной, нескольких или всех
+	//сессиях, выбираемых по желанию пользователя, с указанием интервала года
+	//рождения.
 	void completeIndividualVar() {
 
 	}
 	void exitTable() {
-		cout << "Произведен выход из работы" << endl;
+		system("cls");
+		cout << "Произведен выход из работы\n";
 		exit(0);
 	}
 
 };
-
 
 class IndividualVarinant {
 
