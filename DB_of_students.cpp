@@ -80,21 +80,43 @@ void decrypt() {
 void WRITE(FILE* file) {
 	fopen_s(&file, "file.txt", "w");
 	ClassList <ClassStudent> tempStudents;
-	ClassStudent Alex("Алекс", "Жик", "Миха123456", 127, 82, 2004, 2022, "IKB2", "KB-04", "БАСО-07-22", "22Б9123", 1);
-	Alex.fillExam(0, "Программирование", 5);
-	Alex.fillExam(0, "Психология", 4);
-	Alex.fillExam(0, "Информатика", 5);
-	Alex.fillExam(1, "История", 5);
+	//1
+	ClassStudent Dany("Даниил", "Атавин", "Антонович", 07, 02, 2005, 2022, "IKB2", "KB-02", "БИСО-01-22", "22Б8660", 1);
+	tempStudents.addElem(Dany);
+	//2
+	ClassStudent Maxim("Максим", "Бовин", "Олегович", 23, 05, 2003, 2022, "IKB2", "KB-03", "БАСО-03-22", "22Б8661", 1);
+	tempStudents.addElem(Maxim);
+	//3
+	ClassStudent Ksenia("Ксения", "Брайнин", "Алексеевна", 30, 10, 2004, 2022, "IKB2", "KB-03", "БАСО-03-22", "22Б1003", 0);
+	tempStudents.addElem(Ksenia);
+	//4
+	ClassStudent Alina("Алина", "Грибанова", "Владимировна", 01, 02, 2004, 2022, "IKB2", "KB-03", "БАСО-03-22", "22Б0864", 0);
+	tempStudents.addElem(Alina);
+	//5
+	ClassStudent Ilya("Илья", "Долгов", "Сергеевич", 15, 03, 2003, 2022, "IKB2", "KB-03", "БАСО-03-22", "22Б0866", 1);
+	tempStudents.addElem(Ilya);
+	//6
+	ClassStudent Nastya("Анастасия", "Ерофеева", "Александрова", 06, 06, 2004, 2022, "IKB2", "KB-02", "БАСО-03-22", "22Б0868", 0);
+	tempStudents.addElem(Nastya);
+	//7
+	ClassStudent Alex("Александр", "Кондрашкин", "Олегович", 06, 11, 2004, 2022, "IKB2", "KB-02", "БИСО-01-22", "22Б0875", 1);
 	tempStudents.addElem(Alex);
-	cout << Alex.getName();
+	//8
+	ClassStudent Vlad("Владислав", "Королёв", "Денисович", 12, 01, 2004, 2022, "IKB2", "KB-02", "БИСО-01-22", "22Б0877", 1);
+	tempStudents.addElem(Vlad);
+	//9
+	ClassStudent Kostya("Константин", "Папин", "Михайлович", 25, 01, 2005, 2022, "IKB2", "KB-04", "ББББ-06-22", "22Б0884", 1);
+	tempStudents.addElem(Kostya);
+	//10
+	ClassStudent Artem("Артем", "Франк", "Александрович", 23, 04, 2004, 2022, "IKB2", "KB-04", "ББББ-06-22", "22Б0896", 1);
+	tempStudents.addElem(Artem);
+
 	for (int i = 0; i < tempStudents.getSize(); i++) {
-		/*fprintf_s(file, "%s %s %s %d %d %d %d %s %s %s %s b \n", \
+		fprintf_s(file, "%s %s %s %d %d %d %d %s %s %s\n", \
 			tempStudents[i].getSurname(), tempStudents[i].getName(), tempStudents[i].getPatronymic(), \
 			tempStudents[i].getBirthDay(), tempStudents[i].getBirthMonth(), tempStudents[i].getBirthYear(), \
 			tempStudents[i].getYearStart(), tempStudents[i].getInstitute(), tempStudents[i].getDepartment(),
-			tempStudents[i].getGroup(), tempStudents[i].getID(), tempStudents[i].getSex());*/
-		cout << tempStudents[i].getName();
-		fprintf_s(file, "%s \n", tempStudents[i].getName());
+			tempStudents[i].getGroup(), tempStudents[i].getID(), tempStudents[i].getSex());
 	}
 
 	fclose(file);
@@ -114,10 +136,9 @@ int main() {
 	}
 
 	system("cls");
-
 	FILE* file = NULL;
 	WRITE(file);
-	//ClassMenu mainMenu;
-	//mainMenu.draw(file);
+	ClassMenu mainMenu;
+	mainMenu.draw(file);
 
 };
