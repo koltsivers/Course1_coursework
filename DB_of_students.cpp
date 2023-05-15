@@ -83,7 +83,7 @@ void WRITE(FILE* file) {
 	char specialSymb[40] = "---------------------------------------";
 	ClassList <ClassStudent> tempStudents;
 	//1
-	ClassStudent Dany("Даниил", "Атавин", "Антонович", 07, 02, 2005, 2022, "ИКБ", "КБ-02", "БИСО-01-22", "22Б8660", 1 );
+	ClassStudent Dany("Даниил", "Атавин", "Антонович", 07, 02, 2005, 2022, "ИКБ", "КБ-02", "БИСО-01-22", "22Б8660", 1);
 	Dany.fillExam(0, "Физика", 5); Dany.fillExam(0, "История", 5); Dany.fillExam(0, "Линейная алгебра", 5); Dany.fillExam(0, "Математический анализ", 5); Dany.fillExam(0, "Основы ОИБ", 5);
 	tempStudents.addElem(Dany);
 	//2
@@ -124,7 +124,14 @@ void WRITE(FILE* file) {
 	tempStudents.addElem(Artem);
 
 	for (int i = 0; i < tempStudents.getSize(); i++) {
-		fprintf_s(file, "%s %d: %s %s %s %d %d %d %d %s %s %s %s\n", firstWord, (i+1), \
+		fprintf_s(file, "%s %s %s %d %d %d %d %s %s %s %s\n", \
+			tempStudents[i].getSurname(), tempStudents[i].getName(), tempStudents[i].getPatronymic(), \
+			tempStudents[i].getBirthDay(), tempStudents[i].getBirthMonth(), tempStudents[i].getBirthYear(), \
+			tempStudents[i].getYearStart(), tempStudents[i].getInstitute(), tempStudents[i].getDepartment(),
+			tempStudents[i].getGroup(), tempStudents[i].getID(), tempStudents[i].getSex());
+
+	}
+		/*fprintf_s(file, "%s %d: %s %s %s %d %d %d %d %s %s %s %s\n", firstWord, (i+1), \
 			tempStudents[i].getSurname(), tempStudents[i].getName(), tempStudents[i].getPatronymic(), \
 			tempStudents[i].getBirthDay(), tempStudents[i].getBirthMonth(), tempStudents[i].getBirthYear(), \
 			tempStudents[i].getYearStart(), tempStudents[i].getInstitute(), tempStudents[i].getDepartment(),
@@ -138,8 +145,7 @@ void WRITE(FILE* file) {
 				}
 			}
 		}
-		fprintf_s(file, "%s\n", specialSymb);
-	}
+		fprintf_s(file, "%s\n", specialSymb);*/
 	fclose(file);
 }
 int main() {
@@ -163,4 +169,5 @@ int main() {
 	mainMenu.draw(file);
 
 };
+
 
