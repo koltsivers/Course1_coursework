@@ -6,6 +6,7 @@
 #include <conio.h>
 #include <stdio.h>
 #include <fstream>
+#include <stdlib.h>
 #include "ClassList.h"
 #include "ClassStudent.h"
 using namespace std;
@@ -76,7 +77,7 @@ public:
 
 		listMenu.listMainMenu.addElem("5. Выход");
 		listMenu.listMainMenu.addElem("4. Выполнить вариант 60");
-		listMenu.listMainMenu.addElem("3. Сохранить БД студентов в файл");
+		listMenu.listMainMenu.addElem("3. Сохранить БД студентов в файл: dbFile.txt");
 		listMenu.listMainMenu.addElem("2. Добавить студента в базу данных");
 		listMenu.listMainMenu.addElem("1. Отобразить/изменить данные о студентах");
 
@@ -95,8 +96,8 @@ public:
 		listMenu.listCurrentStudentMenu.addElem("1. Изменить имя");
 
 		listMenu.listNewStudentMenu.addElem("Назад");
-		listMenu.listNewStudentMenu.addElem("11. Добавить результаты сессий");
-		listMenu.listNewStudentMenu.addElem("10. Введите пол");
+		listMenu.listNewStudentMenu.addElem("11. Добавить данные о сессиях");
+		listMenu.listNewStudentMenu.addElem("10. Выберите пол");
 		listMenu.listNewStudentMenu.addElem("9. Введите номер зачетной книжки");
 		listMenu.listNewStudentMenu.addElem("8. Введите институт");
 		listMenu.listNewStudentMenu.addElem("7. Введите кафедру");
@@ -178,62 +179,98 @@ public:
 	//сессиях, выбираемых по желанию пользователя, с указанием интервала года
 	//рождения.
 	void var60() {
-		ClassList <ClassStudent> groupAverage;
-		unsigned short countOfStudents = students.getSize();
+
+		//Добавление первой сессии некоторым студентам
+		students[0].fillExam(0, "Физика", 5); students[0].fillExam(0, "История", 5); students[0].fillExam(0, "Анализ алгоритмов", 5);
+		students[0].fillExam(0, "Информатика", 4); students[0].fillExam(0, "Мат анализ", 4);
+
+		students[1].fillExam(0, "Линейная алгебра", 4); students[1].fillExam(0, "История", 3); students[1].fillExam(0, "Анализ алгоритмов", 4);
+		students[1].fillExam(0, "Информатика", 3);
+
+		students[7].fillExam(0, "Физика", 4); students[7].fillExam(0, "История", 5); students[7].fillExam(0, "Основы ОИБ", 5);
+
+		students[2].fillExam(0, "Физика", 5); students[2].fillExam(0, "История", 5); students[2].fillExam(0, "Анализ алгоритмов", 5);
+		students[2].fillExam(0, "Информатика", 5); students[2].fillExam(0, "Мат анализ", 5);
+
+		//Добавление второй сессии некоторым студентам
+		students[0].fillExam(1, "Физика", 4); students[0].fillExam(1, "Философия", 4); students[0].fillExam(1, "Основы ОИБ", 3);
+
+		students[5].fillExam(1, "Физика", 5); students[5].fillExam(1, "История", 5); students[5].fillExam(1, "Основы ОИБ", 4);
+		students[5].fillExam(1, "Информатика", 5);
+
+		students[3].fillExam(1, "Физика", 4); students[3].fillExam(1, "История", 5); students[3].fillExam(1, "Анализ алгоритмов", 5);
+		students[3].fillExam(1, "Информатика", 5); students[3].fillExam(1, "Мат анализ", 4);
+
+
+
+		int countOfStudents = students.getSize();
 		for (int index = 0; index < countOfStudents; index++) {
-			float averageGrade = 0;
-			unsigned short countSes = 0;
+			double averageGrade = 0;
+			int countSes = 0;
 			for (int i = 0; i < 9; i++) {
+				int countLes = 0;
+				int sumGrades = 0;
 				if (numsSes[i] != -1) {
 					countSes++;
-					unsigned short countLes = 0;
-					unsigned short sumGrades = 0;
 					for (int j = 0; j < 10; j++) {
 						if (!students[index].getExam().lessons[i][j].empty) {
-							if (students[index].getExam().lessons[i][j].grade == 0) {
-								countLes++;
-								sumGrades += 2;
-							}
-							else if (students[index].getExam().lessons[i][j].grade == 1) {
-								countLes++;
-								sumGrades += 5;
-							}
-							else if (2 <= students[index].getExam().lessons[i][j].grade <= 5) {
-								countLes++;
-								sumGrades += students[index].getExam().lessons[i][j].grade;
-							}	
+							sumGrades += students[index].getExam().lessons[i][j].grade;
+							countLes++;
 						}
 					}
-					averageGrade += sumGrades / countLes;
+					if (countLes == 0) { averageGrade = 0; }
+					else { averageGrade += ((sumGrades * 1.0) / countLes);}
 				}
 			}
-			averageGrade = averageGrade / countSes;
-			students[index].addAverageGrade(averageGrade);
-
+			averageGrade = (averageGrade * 1.0) / countSes;
+			averageGrade = int(averageGrade * 100) / 100.0;
+			if (averageGrade > 0) { students[index].addAverageGrade(averageGrade); }
 		}
+		
 
-		for (int i = 0; i < students.getSize(); i++) {
-			for (int j = 0; j < students.getSize() - i; j++) {
-				if (students[i + 1].getAverageGrade() < students[j].getAverageGrade()) {
-					std::swap(students[j], students[j + 1]);
+		ClassStudent temp;
+		for (int i = 0; i < students.getSize() - 1; i++) {
+			for (int j = 0; j < students.getSize() - 1; j++) {
+				if (students[j + 1].getAverageGrade() > students[j].getAverageGrade()) {
+					temp = students[j + 1];
+					students[j + 1] = students[j];
+					students[j] = temp;
 				}
 			}
 		}
 
+
+		int interval1,  interval2;
+		cout << "Введите год, c которого начинается интервал: ";
+		cin >> interval1;
+		cout << "Введите год, которым заканчивается интервал: ";
+		cin >> interval2;
+		while (interval1 > interval2) {
+			cout << "Неверное определение интервала, попробуйте снова\n";
+			cout << "Введите год, c которого начинается интервал: ";
+			cin >> interval1;
+			cout << "Введите год, которым заканчивается интервал: ";
+			cin >> interval2;
+		}
 		char _key = 0;
 		while (_key != 13) {
 			system("cls");
+			cout << "Список студентов, отсортированный по успеваемости\n";
+
 			for (int i = 0; i < students.getSize(); i++) {
-				cout << students[i] << endl;
+				if ((interval1 <= students[i].getBirthYear()) && (students[i].getBirthYear() <= interval2)) {
+					cout << students[i];
+					cout << " " << students[i].getGroup() << " ";
+					cout << " " << students[i].getID() << " ";
+					cout << " " << students[i].getAverageGrade() << endl;
+				}
 			}
 			cout << "Для возвращения назад нажмите Enter\n";
 			_key = _getch();
 		}
-	page = 4;
-	skipInput = true;
 	}
 
-
+	
 
 	void clearStudent() {
 		strcpy_s(studentMenu.name, "");
@@ -276,23 +313,7 @@ public:
 			return true;
 		}
 		if (strlen(_group) != 10) { return false; }
-		/*for (int i = 0; i < strlen(_group); i++) {
-			for (int j = 0; j < (int)(AlphabetRU.size()); j++) {
-				if ((_group[i] = AlphabetRU[j]) && ((i == 0) || (i == 1) || (i == 2) || (i == 3))) {
-					count++;
-				}
-			}
-			for (int k = 0; k < (int)(Digits.size()); k++) {
-				if ((_group[i] = Digits[k]) && ((i == 5) || (i == 6) || (i == 8) || (i == 9))) {
-					count++;
-				}
-			}
-			if ((_group[i] = (char)("-")) && ((i == 4) || (i == 7))) {
-				count++;
-			}
-		}
-		if (count == strlen(_group)) { return true; }
-		else { return false; }*/
+
 
 	}
 	bool checkIDMenu(char _ID[]) {
@@ -523,28 +544,10 @@ public:
 		studentMenu.exam.addLesson(numSess, nameLesson, grade, _lessonNum);
 		firstEditSes = false;
 		skipInput = true;
-
 	}
 
-	int findLenFile(FILE* file) {
-		string line;
-		int linesFile = 0;
-		ifstream ifs("file.txt");
-		if (!ifs.is_open())
-			cout << "Error open file.txt\n";
-		else
-		{
-			while (getline(ifs, line))
-			{
-				linesFile++;
-			}
-			ifs.close();
-		}
-		return linesFile;
-	}
 	void writeToFile(FILE* _file) {
-		fclose(_file);
-		fopen_s(&_file, "file.txt", "w");
+		fopen_s(&_file, "dbFile.txt", "w");
 		for (int i = 0; i < students.getSize(); i++) {
 			fprintf_s(_file, "%s %s %s %us %us %us %us %s %s %s %s %s \n", \
 				students[i].getSurname(), students[i].getName(), students[i].getPatronymic(), \
@@ -553,7 +556,7 @@ public:
 				students[i].getGroup(), students[i].getID(), students[i].getSex());
 		}
 		fclose(_file);
-		fopen_s(&_file, "file.txt", "a+");
+		fopen_s(&_file, "dbFile.txt", "a+");
 
 	}
 
@@ -588,7 +591,7 @@ public:
 			cout << "Дата рождения: "; printDate(studentMenu.birthDay, studentMenu.birthMonth, studentMenu.birthYear, 7);
 			cout << "\nГод начала обучения: " << studentMenu.yearStart << "\nПол: " << (settingSex ? (studentMenu.sex == 0 ? "Женский" : "Мужской") : "") << endl;
 			cout << "Номер зачетной книжки: " << studentMenu.ID << "\nГруппа: " << studentMenu.group;
-			cout << " Институт: " << studentMenu.institute << " Кафедра: " << studentMenu.department << endl;
+			cout << "\nИнститут: " << studentMenu.institute << "\nКафедра: " << studentMenu.department << endl;
 			page2_is_first = false;
 		}
 		len = listMenu.listNewStudentMenu.getSize();
@@ -601,7 +604,7 @@ public:
 	bool page_3(FILE* _file) {
 		len = 1;
 		writeToFile(_file);
-		cout << "БД записана в файл 'file.txt' \n";
+		cout << "БД записана в файл 'dbFile.txt' \n";
 		system("PAUSE");
 		page = 0;
 		skipInput = true;
@@ -648,23 +651,31 @@ public:
 
 
 	void draw(FILE* file) {
-		fopen_s(&file, "file.txt", "a+");
-		size_t tempLenFile = findLenFile(file);
+		fopen_s(&file, "dbFile.txt", "a+");
+		int tempLenFile = 10;
 		for (int i = 0; i < tempLenFile; i++) {
 			ClassStudent tempStudent;
-			fscanf_s(file, "%s", tempStudent.getName(), sizeof(tempStudent.getName()));
-			fscanf_s(file, "%s", tempStudent.getSurname(), sizeof(tempStudent.getSurname()));
-			fscanf_s(file, "%s", tempStudent.getPatronymic(), sizeof(tempStudent.getPatronymic()));
-			fscanf_s(file, "%us", tempStudent.getBirthDay());
-			fscanf_s(file, "%us", tempStudent.getBirthMonth());
-			fscanf_s(file, "%us", tempStudent.getBirthYear());
-			fscanf_s(file, "%us", tempStudent.getYearStart());
-			fscanf_s(file, "%s", tempStudent.getInstitute(), sizeof(tempStudent.getInstitute()));
-			fscanf_s(file, "%s", tempStudent.getDepartment(), sizeof(tempStudent.getDepartment()));
-			fscanf_s(file, "%s", tempStudent.getGroup(), sizeof(tempStudent.getGroup()));
-			fscanf_s(file, "%s", tempStudent.getID(), sizeof(tempStudent.getID()));
-			fscanf_s(file, "%b", tempStudent.getSex());
-			students.addElem(tempStudent);
+			char firstWord[19];
+			char name[30], surname[30], patronymic[30], institute[30], department[30], group[30], ID[30];
+			unsigned short birthDay = 0, birthMonth = 0, birthYear = 0, yearStart = 0;
+			bool sex; ClassExam exam;
+			//fscanf_s(file, "%s", firstWord, _countof(firstWord));
+			fscanf_s(file, "%s", name, _countof(name));
+			fscanf_s(file, "%s", surname, _countof(surname));
+			fscanf_s(file, "%s", patronymic, _countof(patronymic));
+			fscanf_s(file, "%us", &birthDay);
+			fscanf_s(file, "%us", &birthMonth);
+			fscanf_s(file, "%us", &birthYear);
+			fscanf_s(file, "%us", &yearStart);
+			fscanf_s(file, "%s", institute, _countof(institute));
+			fscanf_s(file, "%s", department, _countof(department));
+			fscanf_s(file, "%s", group, _countof(group));
+			fscanf_s(file, "%s", ID, _countof(ID));
+			//fscanf_s(file, "b", &sex);
+			tempStudent.addName(name); tempStudent.addSurname(surname); tempStudent.addPatronymic(patronymic);
+			tempStudent.addBirth(birthDay, birthMonth, birthYear); tempStudent.addYearStart(yearStart);
+			tempStudent.addInstitute(institute); tempStudent.addDepartment(department); tempStudent.addGroup(group); tempStudent.addID(ID);  //tempStudent.addSex(sex);
+			students.addElem(tempStudent); 
 
 		}
 
@@ -1054,7 +1065,7 @@ public:
 							system("cls");
 							skipInput = true;
 							for (int i = 0; i < 9; i++) {
-								numsSes[i] = 1;
+								numsSes[i] = i + 1;
 							}
 							page = 4;
 						}
@@ -1065,24 +1076,22 @@ public:
 							system("cls");
 							skipInput = true;
 							for (int i = 0; i < 9; i++) {
-								numsSes[i] = 0;
+								numsSes[i] = -1;
 							}
 							page = 4;
 						}
 						if (page == 4 * maxCountOfStudents + 12) {
 							//Произведение рассчетов
 							var60();
-							/*CHOICE = page % maxCountOfStudents;
-							system("cls");
-							skipInput = true;*/
 							page = 4;
+							skipInput = true;
 						}
+
 						
 					}
 				}
 			}
 			page1Exam_is_first = true;
-			page2_is_first = true;
 			page2_is_first = true;
 			page4_is_first = true;
 			if (skipInput) continue;
