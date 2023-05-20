@@ -36,11 +36,11 @@ struct StructStudent {
 	char institute[30];
 	char department[30];
 	char group[30];
-	char ID[10];
-	bool sex = false;
+	char ID[30];
+	char sex[30];
 	ClassExam exam;
 	int countFill = 0;
-	float averageGrade = 0;
+	double averageGrade = 0;
 };
 
 class ClassMenu
@@ -49,23 +49,23 @@ private:
 	ClassList <ClassStudent> students;
 	bool firstEditSes = true;
 	bool skipInput = false;
-	bool settingSex = false;
-	bool time_to_exam = false;
-	bool page_before_time_to_exam = false;
-	bool page_before_add_exam = false;
-	bool page_add_exam = false;
-	bool page_before_edit_exam = false;
-	bool page_edit_exam = false;
-	bool page2_is_first = true;
-	bool page4_is_first = true;
-	bool page1Exam_is_first = true;
-	bool page2012_is_first = true;
+	bool choiceSex = false;
+	bool changeExam = false;
+	bool before_changeExam = false;
+	bool addExam = false;
+	bool before_addExam = false;
+	bool before_editExam = false;
+	bool editExam = false;
+	bool firstPage2 = true;
+	bool firstPage4 = true;
+	bool firstPage1Exam = true;
+	bool allAddedFirst = true;
 	unsigned long long page = 0;
 	const unsigned short maxCountOfStudents = 1000;
 	int numsSes[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
 
-	size_t len;
-	size_t CHOICE = 1, choice;
+
+	size_t len, CHOICE = 1, choice;
 	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD c;
 	char key;
@@ -174,35 +174,8 @@ public:
 
 	}
 
-	//Найти и распечатать все данные о студентах, которые
-	//успевают с наибольшим и наименьшим успехом в одной, нескольких или всех
-	//сессиях, выбираемых по желанию пользователя, с указанием интервала года
-	//рождения.
+
 	void var60() {
-
-		//Добавление первой сессии некоторым студентам
-		students[0].fillExam(0, "Физика", 5); students[0].fillExam(0, "История", 5); students[0].fillExam(0, "Анализ алгоритмов", 5);
-		students[0].fillExam(0, "Информатика", 4); students[0].fillExam(0, "Мат анализ", 4);
-
-		students[1].fillExam(0, "Линейная алгебра", 4); students[1].fillExam(0, "История", 3); students[1].fillExam(0, "Анализ алгоритмов", 4);
-		students[1].fillExam(0, "Информатика", 3);
-
-		students[7].fillExam(0, "Физика", 4); students[7].fillExam(0, "История", 5); students[7].fillExam(0, "Основы ОИБ", 5);
-
-		students[2].fillExam(0, "Физика", 5); students[2].fillExam(0, "История", 5); students[2].fillExam(0, "Анализ алгоритмов", 5);
-		students[2].fillExam(0, "Информатика", 5); students[2].fillExam(0, "Мат анализ", 5);
-
-		//Добавление второй сессии некоторым студентам
-		students[0].fillExam(1, "Физика", 4); students[0].fillExam(1, "Философия", 4); students[0].fillExam(1, "Основы ОИБ", 3);
-
-		students[5].fillExam(1, "Физика", 5); students[5].fillExam(1, "История", 5); students[5].fillExam(1, "Основы ОИБ", 4);
-		students[5].fillExam(1, "Информатика", 5);
-
-		students[3].fillExam(1, "Физика", 4); students[3].fillExam(1, "История", 5); students[3].fillExam(1, "Анализ алгоритмов", 5);
-		students[3].fillExam(1, "Информатика", 5); students[3].fillExam(1, "Мат анализ", 4);
-
-
-
 		int countOfStudents = students.getSize();
 		for (int index = 0; index < countOfStudents; index++) {
 			double averageGrade = 0;
@@ -284,7 +257,7 @@ public:
 		strcpy_s(studentMenu.department, "");
 		strcpy_s(studentMenu.group, "");
 		strcpy_s(studentMenu.ID, "");
-		studentMenu.sex = 0;
+		strcpy_s(studentMenu.sex, "");
 		studentMenu.exam.clear();
 		studentMenu.countFill = 0;
 	}
@@ -303,8 +276,6 @@ public:
 		else { return false; }
 	}
 	bool checkGroupMenu(char _group[]) {
-		string Digits = "0123456789";
-		string AlphabetRU = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
 		string ourGroup = "БИСО-01-22";
 		unsigned short count = 0;
 		if (_group == ourGroup) {
@@ -519,8 +490,8 @@ public:
 
 	}
 	void setSex() {
-		if (page % 10 == 1) { studentMenu.sex = 0; }
-		else { studentMenu.sex = 1; }
+		if (page % 10 == 1) { strcpy_s(studentMenu.sex, "Ж"); }
+		else { strcpy_s(studentMenu.sex, "М"); }
 		studentMenu.countFill++;
 		CHOICE = 10;
 		system("cls");
@@ -548,16 +519,41 @@ public:
 
 	void writeToFile(FILE* _file) {
 		fopen_s(&_file, "dbFile.txt", "w");
+		char firstWord[30] = "Студент номер";
+		char secondWord[30] = "Год рождения/поступления";
+		char thirdWord[30] = "Данные учёбы";
+		char fourthWord[30] = "Пол";
+		char specialSymb[40] = "---------------------------------------";
+		fprintf_s(_file, "%s\n", specialSymb);
 		for (int i = 0; i < students.getSize(); i++) {
-			fprintf_s(_file, "%s %s %s %us %us %us %us %s %s %s %s %s \n", \
-				students[i].getSurname(), students[i].getName(), students[i].getPatronymic(), \
+			fprintf_s(_file, "%s %d: %s %s %s\n%s: %d.%d.%d, %d\n%s: %s %s %s %s\n%s: %s\n", firstWord, (i + 1), \
+				students[i].getSurname(), students[i].getName(), students[i].getPatronymic(), secondWord, \
 				students[i].getBirthDay(), students[i].getBirthMonth(), students[i].getBirthYear(), \
-				students[i].getYearStart(), students[i].getInstitute(), students[i].getDepartment(),
-				students[i].getGroup(), students[i].getID(), students[i].getSex());
+				students[i].getYearStart(), thirdWord, students[i].getInstitute(), students[i].getDepartment(),
+				students[i].getGroup(), students[i].getID(), fourthWord, students[i].getSex());
+
+			int countOfExams = 0;
+			for (int ses = 0; ses < 9; ses++) {
+				for (int les = 0; les < 10; les++) {
+					if (!students[i].getExam().lessons[ses][les].empty) {
+						countOfExams++;
+					}
+				}
+			}
+
+			fprintf_s(_file, "Число сданных экзаменов: %d\n", countOfExams);
+			for (int s = 0; s < 9; s++) {
+				for (int l = 0; l < 10; l++) {
+					if (!students[i].getExam().lessons[s][l].empty) {
+						fprintf_s(_file, "Сессия %d, экзамен %d: %s %d\n", (s + 1), (l + 1), \
+							students[i].getExam().lessons[s][l].nameLesson, students[i].getExam().lessons[s][l].grade);
+					}
+				}
+			}
+			fprintf_s(_file, "%s\n", specialSymb);
 		}
 		fclose(_file);
 		fopen_s(&_file, "dbFile.txt", "a+");
-
 	}
 
 
@@ -586,13 +582,13 @@ public:
 
 	}
 	bool page_2(const unsigned int& _currentChoice) {
-		if (page2_is_first) {
-			cout << "Имя: " << studentMenu.name << " Фамилия: " << studentMenu.surname << " Отчество: " << studentMenu.patronymic << endl;
+		if (firstPage2) {
+			cout << "Имя: " << studentMenu.name << "\nФамилия: " << studentMenu.surname << "\nОтчество: " << studentMenu.patronymic << endl;
 			cout << "Дата рождения: "; printDate(studentMenu.birthDay, studentMenu.birthMonth, studentMenu.birthYear, 7);
-			cout << "\nГод начала обучения: " << studentMenu.yearStart << "\nПол: " << (settingSex ? (studentMenu.sex == 0 ? "Женский" : "Мужской") : "") << endl;
+			cout << "\nГод начала обучения: " << studentMenu.yearStart << "\nПол: " << (choiceSex ? (studentMenu.sex == 0 ? "Женский" : "Мужской") : "") << endl;
 			cout << "Номер зачетной книжки: " << studentMenu.ID << "\nГруппа: " << studentMenu.group;
 			cout << "\nИнститут: " << studentMenu.institute << "\nКафедра: " << studentMenu.department << endl;
-			page2_is_first = false;
+			firstPage2 = false;
 		}
 		len = listMenu.listNewStudentMenu.getSize();
 		(CHOICE == _currentChoice + 1 ? SetConsoleTextAttribute(h, 0x000A) : SetConsoleTextAttribute(h, 0x0007));
@@ -603,22 +599,20 @@ public:
 	}
 	bool page_3(FILE* _file) {
 		len = 1;
-		writeToFile(_file);
+		system("cls");
 		cout << "БД записана в файл 'dbFile.txt' \n";
+		//writeToFile(_file);
 		system("PAUSE");
 		page = 0;
 		skipInput = true;
 		return false;
 
 	}
-	//Найти и распечатать все данные о студентах, которые
-	//успевают с наибольшим и наименьшим успехом в одной, нескольких или всех
-	//сессиях, выбираемых по желанию пользователя, с указанием интервала года
-	//рождения.
+
 	bool page_4(const unsigned int& _currentChoice) {
-		if (page4_is_first) {
+		if (firstPage4) {
 			cout << "Выберите сессии, в которых хотите увидеть средние\nоценки студентов с интервалом года рождения.\nНаведитесь на интересующую Вас сессию и нажмите Enter:" << endl;
-			page4_is_first = false;
+			firstPage4 = false;
 		}
 		len = listMenu.listVar60_1.getSize();
 		(CHOICE == _currentChoice + 1 ? SetConsoleTextAttribute(h, 0x000A) : SetConsoleTextAttribute(h, 0x0007));
@@ -653,30 +647,62 @@ public:
 	void draw(FILE* file) {
 		fopen_s(&file, "dbFile.txt", "a+");
 		int tempLenFile = 10;
-		for (int i = 0; i < tempLenFile; i++) {
+		for (int i = 1; i <= tempLenFile; i++) {
 			ClassStudent tempStudent;
-			char firstWord[19];
-			char name[30], surname[30], patronymic[30], institute[30], department[30], group[30], ID[30];
+			char studentWord[7], numWord[5], specialSymb[40], yearWord[3], yearChoiceWord[25], dataWord[10], knowWord[10], sexWord[10];
+			int numStudent = 0;
+			char name[30], surname[30], patronymic[30], institute[30], department[30], group[30], ID[30], sex[30];
 			unsigned short birthDay = 0, birthMonth = 0, birthYear = 0, yearStart = 0;
-			bool sex; ClassExam exam;
-			//fscanf_s(file, "%s", firstWord, _countof(firstWord));
-			fscanf_s(file, "%s", name, _countof(name));
+
+			fscanf_s(file, "%s", specialSymb, _countof(specialSymb));
+
+			fscanf_s(file, "%s", studentWord, _countof(studentWord));
+			fscanf_s(file, "%s", numWord, _countof(numWord));
+			fscanf_s(file, "%d:", &numStudent);
 			fscanf_s(file, "%s", surname, _countof(surname));
+			fscanf_s(file, "%s",name, _countof(name));
 			fscanf_s(file, "%s", patronymic, _countof(patronymic));
-			fscanf_s(file, "%us", &birthDay);
-			fscanf_s(file, "%us", &birthMonth);
-			fscanf_s(file, "%us", &birthYear);
-			fscanf_s(file, "%us", &yearStart);
+
+			fscanf_s(file, "%s", yearWord, _countof(yearWord));
+			fscanf_s(file, "%s:", yearChoiceWord, _countof(yearChoiceWord));
+			fscanf_s(file, "%d.", &birthDay);
+			fscanf_s(file, "%d.", &birthMonth);
+			fscanf_s(file, "%d,", &birthYear);
+			fscanf_s(file, "%d", &yearStart);
+
+			fscanf_s(file, "%s", dataWord, _countof(dataWord));
+			fscanf_s(file, "%s", knowWord, _countof(knowWord));
 			fscanf_s(file, "%s", institute, _countof(institute));
 			fscanf_s(file, "%s", department, _countof(department));
 			fscanf_s(file, "%s", group, _countof(group));
 			fscanf_s(file, "%s", ID, _countof(ID));
-			//fscanf_s(file, "b", &sex);
+
+			fscanf_s(file, "%s:", sexWord, _countof(sexWord));
+			fscanf_s(file, "%s", sex, _countof(sex));
+
 			tempStudent.addName(name); tempStudent.addSurname(surname); tempStudent.addPatronymic(patronymic);
 			tempStudent.addBirth(birthDay, birthMonth, birthYear); tempStudent.addYearStart(yearStart);
-			tempStudent.addInstitute(institute); tempStudent.addDepartment(department); tempStudent.addGroup(group); tempStudent.addID(ID);  //tempStudent.addSex(sex);
-			students.addElem(tempStudent); 
+			tempStudent.addInstitute(institute); tempStudent.addDepartment(department); tempStudent.addGroup(group); tempStudent.addID(ID); tempStudent.addSex(sex);
 
+			char numExamsWord[10], passWord[10], examsWord[10];
+			int countExams;
+			fscanf_s(file, "%s ", numExamsWord, _countof(numExamsWord));
+			fscanf_s(file, "%s ", passWord, _countof(passWord));
+			fscanf_s(file, "%s: ", examsWord, _countof(examsWord));
+			fscanf_s(file, "%d", &countExams);
+			for (int j = 1; j <= countExams; j++){
+				char nameOfLesson[30], sesWord[6], examWord[7];
+				int numSes, numExam, grade;
+				fscanf_s(file, "%s", sesWord, _countof(sesWord));
+				fscanf_s(file, "%d,", &numSes);
+				fscanf_s(file, "%s", examWord, _countof(examWord));
+				fscanf_s(file, "%d:", &numExam);
+				fscanf_s(file, "%s", nameOfLesson, _countof(nameOfLesson));
+				fscanf_s(file, "%d", &grade);
+				tempStudent.fillExam(numSes - 1, nameOfLesson, grade);
+			}
+			fscanf_s(file, "%s", specialSymb, _countof(specialSymb));
+			students.addElem(tempStudent);
 		}
 
 
@@ -710,17 +736,17 @@ public:
 					if (!page_printEditList(i)) break;
 				}
 
-				if (page / maxCountOfStudents >= maxCountOfStudents + 2 and page / maxCountOfStudents <= 2 * maxCountOfStudents - 1 or (page == ((maxCountOfStudents + 2) * maxCountOfStudents + 10) * maxCountOfStudents + 1 or page == ((maxCountOfStudents + 2) * maxCountOfStudents + 10) * maxCountOfStudents + 2) or time_to_exam or page_add_exam or page_edit_exam) {
+				if (page / maxCountOfStudents >= maxCountOfStudents + 2 and page / maxCountOfStudents <= 2 * maxCountOfStudents - 1 or (page == ((maxCountOfStudents + 2) * maxCountOfStudents + 10) * maxCountOfStudents + 1 or page == ((maxCountOfStudents + 2) * maxCountOfStudents + 10) * maxCountOfStudents + 2) or changeExam or addExam or editExam) {
 
 					if (page == ((maxCountOfStudents + 2) * maxCountOfStudents + 10) * maxCountOfStudents + 1 or page == ((maxCountOfStudents + 2) * maxCountOfStudents + 10) * maxCountOfStudents + 2) {
 						setSex();
 						students[(int)(page / maxCountOfStudents / maxCountOfStudents % maxCountOfStudents - 2)].addSex(studentMenu.sex);
 						page = page / maxCountOfStudents / maxCountOfStudents;
 					}
-					else if (time_to_exam) {
-						if (page1Exam_is_first)
+					else if (changeExam) {
+						if (firstPage1Exam)
 							cout << "Изменить/добавить предмет:\n";
-						page1Exam_is_first = false;
+						firstPage1Exam = false;
 						students[page / maxCountOfStudents / maxCountOfStudents % maxCountOfStudents - 2].copyExam(studentMenu.exam);
 						len = studentMenu.exam.countLessons(page % 10 - 1) + 2;
 						if (i < len - 2) {
@@ -742,28 +768,27 @@ public:
 							(CHOICE == i + 1 ? SetConsoleTextAttribute(h, 0x000A) : SetConsoleTextAttribute(h, 0x0007));
 							cout << listMenu.AddLast[1] << "\n";
 						}
-						page_before_add_exam = true;
-						page_before_edit_exam = true;
+						before_addExam = true;
+						before_editExam = true;
 						if (i == len - 1) {
 							break;
 						}
 
 					}
-					else if (page_add_exam) {
+					else if (addExam) {
 						setExam();
 						students[(int)(page / maxCountOfStudents / maxCountOfStudents % maxCountOfStudents - 2)].addExam(studentMenu.exam);
-						time_to_exam = true;
-						page_add_exam = false;
+						changeExam = true;
+						addExam = false;
 						skipInput = true;
 						break;
 
 					}
-					else if (page_edit_exam) {
-						//firstEditSes = false;
+					else if (editExam) {
 						setExam(choice - 1);
 						students[(int)(page / maxCountOfStudents / maxCountOfStudents % maxCountOfStudents - 2)].addExam(studentMenu.exam);
-						time_to_exam = true;
-						page_add_exam = false;
+						changeExam = true;
+						addExam = false;
 						skipInput = true;
 						break;
 
@@ -836,15 +861,15 @@ public:
 						len = listMenu.listExams.getSize();
 						(CHOICE == i + 1 ? SetConsoleTextAttribute(h, 0x000A) : SetConsoleTextAttribute(h, 0x0007));
 						cout << listMenu.listExams[i] << endl;
-						page_before_time_to_exam = true;
+						before_changeExam = true;
 						if (i + 1 == len) break;
 					}
 					else if (page % maxCountOfStudents == 12) {
 						system("cls");
 						char _key = 0;
 						while (_key != 13) {
-							cout << "Для выхода нажмите Enter\n";
 							students[(int)(page / maxCountOfStudents % maxCountOfStudents - 2)].printAllData();
+							cout << "Для выхода нажмите Enter\n";
 							_key = _getch();
 							system("cls");
 
@@ -940,7 +965,7 @@ public:
 					if (page == (2 * maxCountOfStudents + 10) * maxCountOfStudents + 1 or page == (2 * maxCountOfStudents + 10) * maxCountOfStudents + 2) {
 						setSex();
 						page = 2;
-						settingSex = true;
+						choiceSex = true;
 					}
 					if (page == 2 * maxCountOfStudents + 11) {
 						len = listMenu.listExams.getSize();
@@ -968,11 +993,11 @@ public:
 						}
 						else {
 
-							if (page2012_is_first)cout << "Вы ввели не все данные о студенте, вы уверенны что хотите выйти, студент не будет занесен в базу данных\n";
+							if (allAddedFirst)cout << "Вы ввели не все данные о студенте, вы уверенны что хотите выйти?\nCтудент не будет занесен в базу данных\n";
 							(CHOICE == i + 1 ? SetConsoleTextAttribute(h, 0x000A) : SetConsoleTextAttribute(h, 0x0007));
 							cout << listMenu.listSafeStudent[i] << endl;
 							if (i + 1 == len) break;
-							page2012_is_first = false;
+							allAddedFirst = false;
 						}
 					}
 					//var60
@@ -1091,9 +1116,9 @@ public:
 					}
 				}
 			}
-			page1Exam_is_first = true;
-			page2_is_first = true;
-			page4_is_first = true;
+			firstPage1Exam = true;
+			firstPage2 = true;
+			firstPage4 = true;
 			if (skipInput) continue;
 
 			// ждем нажатия клавиши
@@ -1129,37 +1154,37 @@ public:
 						clearStudent();
 						page = 0;
 					}
-					else if (time_to_exam) {
-						time_to_exam = false;
-						page_before_add_exam = false;
-						page_before_edit_exam = false;
-						page_edit_exam = false;
-						page_before_time_to_exam = false;
+					else if (changeExam) {
+						changeExam = false;
+						before_addExam = false;
+						before_editExam = false;
+						editExam = false;
+						before_changeExam = false;
 						page = page / maxCountOfStudents;
 					}
-					else if (page % maxCountOfStudents == 11 and page_before_time_to_exam) {
-						page_before_time_to_exam = false;
+					else if (page % maxCountOfStudents == 11 and before_changeExam) {
+						before_changeExam = false;
 						page = page / maxCountOfStudents;
 					}
 					else page = page / maxCountOfStudents;
 
 				}
 				else {
-					if (page_before_time_to_exam) {
-						time_to_exam = true;
-						page_before_time_to_exam = false;
+					if (before_changeExam) {
+						changeExam = true;
+						before_changeExam = false;
 						page = page * maxCountOfStudents + CHOICE;
 					}
 					else if (page == 2 * maxCountOfStudents + 12) page = page / maxCountOfStudents;
-					else if (CHOICE == len - 1 and page_before_add_exam) {
-						page_before_add_exam = false;
-						time_to_exam = false;
-						page_add_exam = true;
+					else if (CHOICE == len - 1 and before_addExam) {
+						before_addExam = false;
+						changeExam = false;
+						addExam = true;
 					}
-					else if (page_before_edit_exam) {
-						page_before_edit_exam = false;
-						time_to_exam = false;
-						page_edit_exam = true;
+					else if (before_editExam) {
+						before_editExam = false;
+						changeExam = false;
+						editExam = true;
 					}
 					else page = page * maxCountOfStudents + CHOICE;
 
@@ -1168,7 +1193,7 @@ public:
 				choice = CHOICE;
 				CHOICE = 1;
 
-				settingSex = false;
+				choiceSex = false;
 			}
 		}
 	}
